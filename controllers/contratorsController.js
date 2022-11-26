@@ -12,8 +12,14 @@ const getContracorByNIP = asyncHandler(async (req, res) => {
   res.status(200).json(contractor);
 });
 
+// GET ALL CONTRACTORS
 const getAllContractors = asyncHandler(async (req, res) => {
-  const allContractors = await contractorsSchema.find();
+  if (!req.params.sortBy || !req.params.sortType || !req.params.limit) {
+    res.status(400);
+    throw new Error("Must specift sortyBy, sortType and limit");
+  }
+  const { sortBy, sortType, limit } = req.params;
+  const allContractors = await contractorsSchema.find({}, null, { sort: { [sortBy]: `${sortType}` }, limit });
   res.status(200).json(allContractors);
 });
 
