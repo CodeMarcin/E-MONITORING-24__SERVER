@@ -41,4 +41,15 @@ const addContractor = asyncHandler(async (req, res) => {
   res.status(200).json(contractor);
 });
 
-module.exports = { getContracorByNIP, getAllContractors, addContractor };
+const delteContractorByID = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400);
+    throw new Error("Must specify a NIP number");
+  }
+
+  const { id } = req.params;
+  const deleteByID = await contractorsSchema.deleteOne({ _id: id });
+  res.status(200).json(deleteByID);
+});
+
+module.exports = { getContracorByNIP, getAllContractors, addContractor, delteContractorByID };
