@@ -1,14 +1,25 @@
 const asyncHandler = require("express-async-handler");
 const contractorsSchema = require("../models/contractorsModel");
 
-// GET CONTRACTOR BY ID
+// GET CONTRACTOR BY NIP
 const getContracorByNIP = asyncHandler(async (req, res) => {
   if (!req.params.nip) {
     res.status(400);
     throw new Error("Must specify a NIP number");
   }
   const { nip, limit } = req.params;
-  const contractor = await contractorsSchema.find({ nip }, null, { limit });
+  const contractors = await contractorsSchema.find({ nip }, null, { limit });
+  res.status(200).json(contractors);
+});
+
+// GET CONTRACTOR BY ID
+const getContracorByID = asyncHandler(async (req, res) => {
+  if (!req.params.id) {
+    res.status(400);
+    throw new Error("Must specify a ID number and limit");
+  }
+  const { id } = req.params;
+  const contractor = await contractorsSchema.findById(id);
   res.status(200).json(contractor);
 });
 
@@ -41,15 +52,36 @@ const addContractor = asyncHandler(async (req, res) => {
   res.status(200).json(contractor);
 });
 
+// DELETE CONTRACTOR BY ID
 const delteContractorByID = asyncHandler(async (req, res) => {
   if (!req.params.id) {
     res.status(400);
     throw new Error("Must specify a NIP number");
   }
-
   const { id } = req.params;
   const deleteByID = await contractorsSchema.deleteOne({ _id: id });
   res.status(200).json(deleteByID);
 });
 
-module.exports = { getContracorByNIP, getAllContractors, addContractor, delteContractorByID };
+// EDIT CONTRACTOR BY ID
+const editContractorByID = asyncHandler(async (req, res) => {
+  if (!req.body._id | !req.body.name || !req.body.zipcode || !req.body.address || !req.body.city || !req.body.nip) {
+    res.status(400);
+    throw new Error("Invalid data to () => addContracotr.");
+  }
+  const { _id, name, address, zipcode, city, email, nip } = req.body;
+  const editedContractor = await contractorsSchema.findOneAndUpdate(
+    { _id },
+    {
+      name,
+      address,
+      zipcode,
+      city,
+      email,
+      nip,
+    },
+    { new: true }
+  );
+   res.status(200).json(editedContractor);
+});
+module.exports = { getContracorByNIP, getContracorByID, getAllContractors, addContractor, delteContractorByID, editContractorByID };
