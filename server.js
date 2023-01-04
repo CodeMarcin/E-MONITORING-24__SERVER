@@ -21,5 +21,7 @@ app.use((req, res, next) => {
 
 app.use("/contractors", require("./routes/contractorsRouter"));
 app.use("/settings", require("./routes/settingsRouter"));
+app.use("/company", require("./routes/companyRouter"));
+app.use("/invoices", require("./routes/invoicesRouter"))
 
 app.listen(port, () => console.log(`Server run on port ${port}`));
