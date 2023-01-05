@@ -7,6 +7,6 @@ router.get("/getContracorByID/:id/", getContracorByID);
 router.get("/getAllContractors/:sortBy/:sortType/:limit", getAllContractors);
 router.post("/addContractor", addContractor);
 router.put("/editContractorByID", editContractorByID);
-router.delete("/delteContractorByID/:id", delteContractorByID);
+router.delete("/delteContractorByID/:id/:deleteAllInvoices", delteContractorByID);
 
 module.exports = router;

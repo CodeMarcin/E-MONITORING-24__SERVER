@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const contractorsSchema = require("../models/contractorsModel");
+const invoicesSchema = require("../models/invoiceModel");
 
 // GET CONTRACTOR BY NIP
 const getContracorByNIP = asyncHandler(async (req, res) => {
@@ -58,9 +59,11 @@ const delteContractorByID = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Must specify a NIP number");
   }
-  const { id } = req.params;
-  const deleteByID = await contractorsSchema.deleteOne({ _id: id });
-  res.status(200).json(deleteByID);
+  const { id, deleteAllInvoices } = req.params;
+
+  await contractorsSchema.deleteOne({ _id: id });
+  if (deleteAllInvoices === 'true') await invoicesSchema.deleteMany({ selectedContractorId: id });
+  res.status(200).json(true);
 });
 
 // EDIT CONTRACTOR BY ID
@@ -82,6 +85,6 @@ const editContractorByID = asyncHandler(async (req, res) => {
     },
     { new: true }
   );
-   res.status(200).json(editedContractor);
+  res.status(200).json(editedContractor);
 });
 module.exports = { getContracorByNIP, getContracorByID, getAllContractors, addContractor, delteContractorByID, editContractorByID };
